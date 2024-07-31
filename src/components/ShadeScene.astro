@@ -17,6 +17,9 @@
 <script>
     import * as THREE from 'three';
     import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import vertexShader from '../shaders/vertex.glsl';
+    import fragmentShader from '../shaders/fragment.glsl';
+
 
     document.addEventListener('DOMContentLoaded', () => {
         const container = document.getElementById('three-container')
@@ -31,10 +34,14 @@
         container.appendChild(renderer.domElement);
 
         //initialize sphere after DOM Content is loaded
-        const sphereGeo = new THREE.SphereGeometry(7,32,16);
-        const material = new THREE.MeshBasicMaterial({
-            color: 'blue',
-            wireframe: true
+        const sphereGeo = new THREE.PlaneGeometry(1,1);
+        const material = new THREE.ShaderMaterial({
+            vertexShader: vertexShader,
+            fragmentShader: fragmentShader,
+            uniforms: {
+                uTime: 0,
+                uRadius: 2,
+            }
         });
 
         //adding sphere to scene
@@ -44,14 +51,14 @@
         const controls = new OrbitControls(camera, renderer.domElement);
 
         //position camera
-        camera.position.z = 20;
+        camera.position.z = 2;
 
         //animate
         const animate = function() {
             requestAnimationFrame(animate);
 
             //sample animation
-            sphere.rotation.x += 0.002;
+            //sphere.rotation.x += 0.002;
 
             //updating orbit controls
             controls.update();
