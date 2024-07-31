@@ -16,6 +16,56 @@
 
 <script>
     import * as THREE from 'three';
-    
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const container = document.getElementById('three-container')
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({
+
+        })
+
+        renderer.setSize(container.clientWidth, container.clientHeight);
+        container.appendChild(renderer.domElement);
+
+        //initialize sphere after DOM Content is loaded
+        const sphereGeo = new THREE.SphereGeometry(7,32,16);
+        const material = new THREE.MeshBasicMaterial({
+            color: 'blue',
+            wireframe: true
+        });
+
+        //adding sphere to scene
+        const sphere = new THREE.Mesh(sphereGeo, material);
+        scene.add(sphere);
+
+        const controls = new OrbitControls(camera, renderer.domElement);
+
+        //position camera
+        camera.position.z = 20;
+
+        //animate
+        const animate = function() {
+            requestAnimationFrame(animate);
+
+            //sample animation
+            sphere.rotation.x += 0.002;
+
+            //updating orbit controls
+            controls.update();
+
+            renderer.render(scene, camera);
+        }
+
+        animate();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = container.clientWidth / container.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(container.clientWidth, container.clientHeight);
+        })
+    })
 
 </script>
