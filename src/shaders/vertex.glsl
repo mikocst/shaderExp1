@@ -11,11 +11,10 @@ void main() {
     vNormal = normal;
     vUv = uv;
 
-    //Transform -> position, scale, rotation
-    //model matrix -> position, scale, rotation of the model
-    //view matrix -> position and orientation of camera
-    //projection matrix -> projects object onto screen (aspect ratio and perspective ratio)
+    vec3 transformed = position;
+    transformed.x += cos(position.y + uTime) * 3.0;
+    transformed.y += sin(position.x + uTime) * 1.5;
 
-    //MVP model view projection series (order matters)
-    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1);
+
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(transformed, 1.0);
 }
