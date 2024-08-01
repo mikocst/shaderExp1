@@ -16,9 +16,18 @@
 
 <script>
     import * as THREE from 'three';
+    import { imageConfig } from "astro:assets";
     import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
     import vertexShader from '../shaders/vertex.glsl';
     import fragmentShader from '../shaders/fragment.glsl';
+    
+    const textureLoader = new THREE.TextureLoader();
+    const marbleText = '../images/marble.jpg';
+    const texture = textureLoader.load(marbleText, (texture) => {
+    texture.minFilter = THREE.NearestFilter;
+  }) 
+  console.log(texture)
+   
 
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -27,20 +36,20 @@
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({
-
         })
 
         renderer.setSize(container.clientWidth, container.clientHeight);
         container.appendChild(renderer.domElement);
 
         //initialize sphere after DOM Content is loaded
-        const sphereGeo = new THREE.PlaneGeometry(1,1);
+        const sphereGeo = new THREE.SphereGeometry(7,32,16);
         const material = new THREE.ShaderMaterial({
             vertexShader: vertexShader,
             fragmentShader: fragmentShader,
             uniforms: {
-                uTime: 0,
-                uRadius: 2,
+                uTime: { value: 0},
+                uRadius: {value: 2},
+                uTexture:{value:texture},
             }
         });
 
@@ -51,14 +60,14 @@
         const controls = new OrbitControls(camera, renderer.domElement);
 
         //position camera
-        camera.position.z = 2;
+        camera.position.z = 20;
 
         //animate
         const animate = function() {
             requestAnimationFrame(animate);
 
             //sample animation
-            //sphere.rotation.x += 0.002;
+            sphere.rotation.x += 0.002;
 
             //updating orbit controls
             controls.update();
